@@ -191,3 +191,12 @@ func (rds RedisClient) SMembers(key string) []string {
 	}
 	return result
 }
+
+func (rds RedisClient) HKeys(key string) []string {
+	result, err := rds.Client.HKeys(rds.Context, key).Result()
+	if err != nil {
+		logger.ErrorString("Redis", "HKeys", err.Error())
+		return nil
+	}
+	return result
+}
