@@ -1,6 +1,8 @@
 package bungee
 
-import "gohub/pkg/redis"
+import (
+	"gohub/pkg/redis"
+)
 
 type BungeeCluster struct {
 	RedisClient *redis.RedisClient
@@ -18,8 +20,10 @@ func InitBungeeCluster(redisConf redis.RedisConf) {
 func (b *BungeeCluster) FetchProxies() {
 	proxyNames := b.RedisClient.HKeys("heartbeats")
 	proxies := make([]BungeeProxy, len(proxyNames))
-	for _, name := range proxyNames {
-		proxies = append(proxies, BungeeProxy{Name: name})
+	for i, name := range proxyNames {
+		proxies[i] = BungeeProxy{
+			Name: name,
+		}
 	}
 	b.Proxies = proxies
 }
