@@ -2,10 +2,10 @@
 package bootstrap
 
 import (
-	"fmt"
 	"gohub/pkg/cache"
 	"gohub/pkg/config"
 	"gohub/pkg/logger"
+	"gohub/pkg/redis"
 )
 
 // SetupCache 缓存
@@ -15,12 +15,7 @@ func SetupCache() {
 
 	switch config.Get[string]("cache.driver") {
 	case "redis":
-		store = cache.NewRedisStore(
-			fmt.Sprintf("%v:%v", config.Get[string]("redis.host"), config.Get[string]("redis.port")),
-			config.Get[string]("redis.username"),
-			config.Get[string]("redis.password"),
-			config.Get[int]("redis.database_cache"),
-		)
+		store = cache.NewRedisStore(config.Get[*redis.RedisConf]("redis.cache"))
 	case "memory":
 		store = cache.NewMemoryStore()
 	default:

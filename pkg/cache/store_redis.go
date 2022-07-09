@@ -12,9 +12,9 @@ type RedisStore struct {
 	KeyPrefix   string
 }
 
-func NewRedisStore(address string, username string, password string, db int) *RedisStore {
+func NewRedisStore(conf *redis.RedisConf) *RedisStore {
 	rs := &RedisStore{}
-	rs.RedisClient = redis.NewClient(address, username, password, db)
+	rs.RedisClient = redis.NewClientWithConf(conf)
 	rs.KeyPrefix = config.Get[string]("app.name") + ":cache:"
 	return rs
 }

@@ -13,11 +13,12 @@ func SetupRedis() {
 		return
 	}
 
+	mainConf := config.Get[redis.RedisConf]("redis.default")
 	// 建立 Redis 连接
 	redis.ConnectRedis(
-		fmt.Sprintf("%v:%v", config.Get[string]("redis.host"), config.Get[string]("redis.port")),
-		config.Get[string]("redis.username"),
-		config.Get[string]("redis.password"),
-		config.Get[int]("redis.database"),
+		fmt.Sprintf("%v:%v", mainConf.Host, mainConf.Port),
+		"",
+		mainConf.Password,
+		mainConf.Database,
 	)
 }

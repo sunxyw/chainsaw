@@ -2,6 +2,9 @@ package config
 
 import (
 	"gohub/pkg/config"
+	"gohub/pkg/redis"
+
+	"github.com/spf13/cast"
 )
 
 func init() {
@@ -11,15 +14,21 @@ func init() {
 
 			"enable": config.Env("REDIS_ENABLE", false),
 
-			"host":     config.Env("REDIS_HOST", "127.0.0.1"),
-			"port":     config.Env("REDIS_PORT", "6379"),
-			"password": config.Env("REDIS_PASSWORD", ""),
+			"default": &redis.RedisConf{
+				Enable:   cast.ToBool(config.Env("REDIS_ENABLE", false)),
+				Host:     cast.ToString(config.Env("REDIS_HOST", "127.0.0.1")),
+				Port:     cast.ToString(config.Env("REDIS_PORT", "6379")),
+				Password: cast.ToString(config.Env("REDIS_PASSWORD", "")),
+				Database: cast.ToInt(config.Env("REDIS_MAIN_DB", 1)),
+			},
 
-			// 业务类存储使用 1 (图片验证码、短信验证码、会话)
-			"database": config.Env("REDIS_MAIN_DB", 1),
-
-			// 缓存 cache 包使用 0 ，缓存清空理应当不影响业务
-			"database_cache": config.Env("REDIS_CACHE_DB", 0),
+			"cache": &redis.RedisConf{
+				Enable:   cast.ToBool(config.Env("REDIS_ENABLE", false)),
+				Host:     cast.ToString(config.Env("REDIS_HOST", "127.0.0.1")),
+				Port:     cast.ToString(config.Env("REDIS_PORT", "6379")),
+				Password: cast.ToString(config.Env("REDIS_PASSWORD", "")),
+				Database: cast.ToInt(config.Env("REDIS_CACHE_DB", 0)),
+			},
 		}
 	})
 }

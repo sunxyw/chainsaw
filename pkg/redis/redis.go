@@ -3,6 +3,7 @@ package redis
 
 import (
 	"context"
+	"fmt"
 	"gohub/pkg/logger"
 	"sync"
 	"time"
@@ -50,6 +51,10 @@ func NewClient(address string, username string, password string, db int) *RedisC
 	logger.LogIf(err)
 
 	return rds
+}
+
+func NewClientWithConf(conf *RedisConf) *RedisClient {
+	return NewClient(fmt.Sprintf("%v:%v", conf.Host, conf.Port), "", conf.Password, conf.Database)
 }
 
 // Ping 用以测试 redis 连接是否正常
