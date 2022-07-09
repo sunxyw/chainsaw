@@ -2,18 +2,20 @@ package bungee
 
 import "gohub/pkg/redis"
 
-type BungeeRedis struct {
+type BungeeCluster struct {
 	RedisClient *redis.RedisClient
 	Proxies     []BungeeProxy
 }
 
-func NewBungeeRedis(redisClient *redis.RedisClient) *BungeeRedis {
-	return &BungeeRedis{
-		RedisClient: redisClient,
+var Cluster *BungeeCluster
+
+func InitBungeeCluster(redisConf redis.RedisConf) {
+	Cluster = &BungeeCluster{
+		RedisClient: redis.NewClientWithConf(redisConf),
 	}
 }
 
-func (b *BungeeRedis) FetchProxies() {
+func (b *BungeeCluster) FetchProxies() {
 	proxyNames := b.RedisClient.HKeys("heartbeats")
 	proxies := make([]BungeeProxy, len(proxyNames))
 	for _, name := range proxyNames {

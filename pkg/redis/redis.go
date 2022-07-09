@@ -53,7 +53,7 @@ func NewClient(address string, username string, password string, db int) *RedisC
 	return rds
 }
 
-func NewClientWithConf(conf *RedisConf) *RedisClient {
+func NewClientWithConf(conf RedisConf) *RedisClient {
 	return NewClient(fmt.Sprintf("%v:%v", conf.Host, conf.Port), "", conf.Password, conf.Database)
 }
 

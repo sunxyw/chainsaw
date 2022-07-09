@@ -15,7 +15,7 @@ func SetupCache() {
 
 	switch config.Get[string]("cache.driver") {
 	case "redis":
-		store = cache.NewRedisStore(config.Get[*redis.RedisConf]("redis.cache"))
+		store = cache.NewRedisStore(config.Get[redis.RedisConf]("redis.cache"))
 	case "memory":
 		store = cache.NewMemoryStore()
 	default:

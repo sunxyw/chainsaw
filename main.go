@@ -40,7 +40,7 @@ func main() {
 			bootstrap.SetupDB()
 
 			// 初始化 Redis
-			// bootstrap.SetupRedis()
+			bootstrap.SetupRedis()
 
 			// 初始化缓存
 			bootstrap.SetupCache()
@@ -50,6 +50,8 @@ func main() {
 
 			// 初始化 JWT
 			bootstrap.SetupJWT()
+
+			bootstrap.SetupBungee()
 		},
 	}
 
