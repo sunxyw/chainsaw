@@ -16,5 +16,15 @@ var CmdPlay = &cobra.Command{
 // 调试完成后请记得清除测试代码
 func runPlay(cmd *cobra.Command, args []string) {
 	bungee.Cluster.FetchProxies()
-	logger.Dump(bungee.Cluster.Proxies)
+
+	for _, proxy := range bungee.Cluster.Proxies {
+		logger.InfoString("play", "proxy", proxy.Name)
+		proxy.FetchPlayerlist()
+		for server, players := range proxy.GetPlayerlist() {
+			logger.InfoString("play", "server", server)
+			for _, player := range players {
+				logger.InfoString("play", "player", player.Name)
+			}
+		}
+	}
 }
