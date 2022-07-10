@@ -19,21 +19,16 @@ var ConfigFuncs map[string]ConfigFunc
 
 func init() {
 
-	// 初始化 Viper 库
+	// 1. 初始化 Viper 库
 	viper = viperlib.New()
-
-	// 如果 .env 不存在，則略过
-	if _, err := os.Stat(".env"); err == nil {
-		// 配置类型，支持 "json", "toml", "yaml", "yml", "properties",
-		//             "props", "prop", "env", "dotenv"
-		viper.SetConfigType("env")
-		// 环境变量配置文件查找的路径，相对于 main.go
-		viper.AddConfigPath(".")
-		// 设置环境变量前缀，用以区分 Go 的系统环境变量
-		viper.SetEnvPrefix("appenv")
-	}
-
-	// 读取环境变量（支持 flags）
+	// 2. 配置类型，支持 "json", "toml", "yaml", "yml", "properties",
+	//             "props", "prop", "env", "dotenv"
+	viper.SetConfigType("env")
+	// 3. 环境变量配置文件查找的路径，相对于 main.go
+	viper.AddConfigPath(".")
+	// 4. 设置环境变量前缀，用以区分 Go 的系统环境变量
+	viper.SetEnvPrefix("appenv")
+	// 5. 读取环境变量（支持 flags）
 	viper.AutomaticEnv()
 
 	ConfigFuncs = make(map[string]ConfigFunc)
@@ -63,6 +58,11 @@ func loadEnv(envSuffix string) {
 			// 如 .env.testing 或 .env.stage
 			envPath = filepath
 		}
+	}
+
+	// 如果 .env 文件不存在，则略过
+	if _, err := os.Stat(envPath); err != nil {
+		return
 	}
 
 	// 加载 env
