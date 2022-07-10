@@ -9,7 +9,7 @@ import (
 
 func SetupCronjob() {
 	cron := cronpkg.New()
-	cron.AddJob("@every 1m", &jobs.FetchBungees{})
+	cron.AddJob("@every 20s", &jobs.FetchBungees{})
 	cron.Start()
 	logger.InfoString("cronjob", "scheduler", "started")
 }
