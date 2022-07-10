@@ -2,6 +2,7 @@
 package routes
 
 import (
+	controllers "gohub/app/http/controllers/api/v1"
 	"gohub/app/http/middlewares"
 	"gohub/pkg/config"
 
@@ -23,13 +24,18 @@ func RegisterAPIRoutes(r *gin.Engine) {
 	// 作为参考 Github API 每小时最多 60 个请求（根据 IP）。
 	// 测试时，可以调高一点。
 	v1.Use(middlewares.ThrottleByIP("200-H"))
-
 	{
 		authGroup := v1.Group("/auth")
 		// 限流中间件：每小时限流，作为参考 Github API 每小时最多 60 个请求（根据 IP）
 		// 测试时，可以调高一点
 		authGroup.Use(middlewares.ThrottleByIP("1000-H"))
 		{
+		}
+
+		bungeeGroup := v1.Group("/bungees")
+		{
+			bgc := new(controllers.BungeesController)
+			bungeeGroup.GET("/", bgc.Index)
 		}
 	}
 }
