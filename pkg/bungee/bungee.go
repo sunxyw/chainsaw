@@ -5,11 +5,13 @@ import (
 	"fmt"
 	"gohub/pkg/logger"
 	"gohub/pkg/redis"
+	"time"
 )
 
 type BungeeCluster struct {
 	RedisClient *redis.RedisClient
 	Proxies     []BungeeProxy
+	LastFetch   time.Time
 }
 
 var Cluster *BungeeCluster
@@ -17,6 +19,8 @@ var Cluster *BungeeCluster
 func InitBungeeCluster(redisConf redis.RedisConf) {
 	Cluster = &BungeeCluster{
 		RedisClient: redis.NewClientWithConf(redisConf),
+		Proxies:     []BungeeProxy{},
+		LastFetch:   time.Now().Add(-time.Hour),
 	}
 }
 

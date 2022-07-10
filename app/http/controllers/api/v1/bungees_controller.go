@@ -14,15 +14,12 @@ type BungeesController struct {
 func (ctrl *BungeesController) Index(c *gin.Context) {
 	result := make(map[string]map[string][]bungee.BungeePlayer)
 
-	bungee.Cluster.FetchProxies()
-
 	for _, proxy := range bungee.Cluster.Proxies {
-		proxy.FetchPlayerlist()
-
 		result[proxy.Name] = proxy.GetPlayerlist()
 	}
 
 	response.SuccessWithData(c, gin.H{
-		"data": result,
+		"sync_time": bungee.Cluster.LastFetch,
+		"data":      result,
 	})
 }

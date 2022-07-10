@@ -10,6 +10,7 @@ import (
 	"gohub/pkg/console"
 	"gohub/pkg/firebase"
 	"os"
+	"time"
 
 	"github.com/spf13/cobra"
 )
@@ -32,6 +33,14 @@ func main() {
 
 			// 配置初始化，依赖命令行 --env 参数
 			config.InitConfig(cmd.Env)
+
+			// 根据配置设置时区
+			timezoneString := config.Get[string]("app.timezone")
+			timezone, err := time.LoadLocation(timezoneString)
+			if err != nil {
+				panic(err)
+			}
+			time.Local = timezone
 
 			// 初始化 Logger
 			bootstrap.SetupLogger()

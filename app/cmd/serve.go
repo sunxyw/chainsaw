@@ -32,6 +32,8 @@ func runWeb(cmd *cobra.Command, args []string) {
 	// 初始化路由绑定
 	bootstrap.SetupRoute(router)
 
+	bootstrap.SetupCronjob()
+
 	// 运行服务器
 	err := router.Run(":" + config.Get[string]("app.port"))
 	if err != nil {
