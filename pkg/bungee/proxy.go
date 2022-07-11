@@ -27,6 +27,8 @@ func (b *BungeeProxy) FetchPlayerlist() {
 	}
 
 	names := Cluster.GetCachedPlayerNames(uuids)
+
+	list := make(map[string][]BungeePlayer)
 	for _, uuid := range uuids {
 		playerInfo := Cluster.GetPlayerInfo(uuid)
 
@@ -41,6 +43,8 @@ func (b *BungeeProxy) FetchPlayerlist() {
 			Server: playerInfo["server"],
 		}
 
-		b.playerlist[player.Server] = append(b.playerlist[player.Server], player)
+		list[player.Server] = append(list[player.Server], player)
 	}
+
+	b.playerlist = list
 }
