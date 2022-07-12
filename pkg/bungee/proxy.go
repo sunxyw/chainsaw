@@ -2,6 +2,7 @@ package bungee
 
 import (
 	"fmt"
+	"gohub/pkg/logger"
 )
 
 type BungeeProxy struct {
@@ -33,6 +34,7 @@ func (b *BungeeProxy) FetchPlayerlist() {
 		playerInfo := Cluster.GetPlayerInfo(uuid)
 
 		if playerInfo["online"] != "0" {
+			logger.WarnString("bungee", "playerlist", "player not online while sync: "+uuid)
 			continue
 		}
 

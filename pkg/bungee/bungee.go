@@ -10,7 +10,7 @@ import (
 
 type BungeeCluster struct {
 	RedisClient *redis.RedisClient
-	Proxies     []BungeeProxy
+	Proxies     []*BungeeProxy
 	LastFetch   time.Time
 }
 
@@ -19,16 +19,16 @@ var Cluster *BungeeCluster
 func InitBungeeCluster(redisConf redis.RedisConf) {
 	Cluster = &BungeeCluster{
 		RedisClient: redis.NewClientWithConf(redisConf),
-		Proxies:     []BungeeProxy{},
+		Proxies:     []*BungeeProxy{},
 		LastFetch:   time.Now().Add(-time.Hour),
 	}
 }
 
 func (b *BungeeCluster) FetchProxies() {
 	proxyNames := b.RedisClient.HKeys("heartbeats")
-	proxies := make([]BungeeProxy, len(proxyNames))
+	proxies := make([]*BungeeProxy, len(proxyNames))
 	for i, name := range proxyNames {
-		proxies[i] = *NewBungeeProxy(name)
+		proxies[i] = NewBungeeProxy(name)
 	}
 	b.Proxies = proxies
 }
