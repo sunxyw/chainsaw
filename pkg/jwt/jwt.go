@@ -3,6 +3,7 @@ package jwt
 
 import (
 	"errors"
+	"gohub/pkg/logger"
 	"sync"
 
 	"github.com/gin-gonic/gin"
@@ -36,14 +37,41 @@ func IssueToken(uid string) string {
 	return JWT.Provider.IssueToken(uid)
 }
 
-func ParseToken(token string) (uid string, err error) {
-	return JWT.Provider.ParseToken(token)
+func ParseToken(token string) (id string, tokenType TokenType, err error) {
+	id, err = JWT.Provider.ParseToken(token)
+
+	if err != nil {
+		return
+	}
+
+	if isServiceToken(id) {
+		tokenType = TokenTypeService
+		id = id[3:]
+	} else {
+		tokenType = TokenTypeUser
+	}
+
+	return
 }
 
-func ParseHeaderToken(c *gin.Context) (uid string, err error) {
+func ParseHeaderToken(c *gin.Context, tokenType TokenType) (id string, ttype TokenType, err error) {
 	token, err := getTokenFromHeader(c)
 	if err != nil {
-		return "", err
+		return
 	}
-	return ParseToken(token)
+
+	id, ttype, err = ParseToken(token)
+	if err != nil {
+		return "", ttype, err
+	}
+
+	inType := getTokenTypeList(tokenType)
+	logger.Dump(inType)
+	for _, t := range inType {
+		if t == ttype {
+			return id, ttype, nil
+		}
+	}
+
+	return "", ttype, ErrTokenInvalid
 }

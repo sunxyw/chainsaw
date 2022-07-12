@@ -36,3 +36,8 @@ func getTokenFromHeader(c *gin.Context) (string, error) {
 	}
 	return token[7:], nil
 }
+
+// isServiceToken 判断是否是 Service Token，即 UID 以 st_ 开头
+func isServiceToken(uid string) bool {
+	return uid[:3] == "st_"
+}

@@ -14,7 +14,7 @@ func GuestJWT() gin.HandlerFunc {
 		if len(c.GetHeader("Authorization")) > 0 {
 
 			// 解析 token 成功，说明登录成功了
-			_, err := jwt.ParseHeaderToken(c)
+			_, _, err := jwt.ParseHeaderToken(c, jwt.TokenTypeUser)
 			if err == nil {
 				response.Unauthorized(c, "请使用游客身份访问")
 				c.Abort()
