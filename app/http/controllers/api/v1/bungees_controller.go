@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"gohub/app/policies"
 	"gohub/pkg/bungee"
 	"gohub/pkg/response"
 
@@ -12,6 +13,12 @@ type BungeesController struct {
 }
 
 func (ctrl *BungeesController) Index(c *gin.Context) {
+
+	if ok := policies.CanViewBungee(c); !ok {
+		response.Forbidden(c)
+		return
+	}
+
 	result := make(map[string]map[string][]bungee.BungeePlayer)
 
 	for _, proxy := range bungee.Cluster.Proxies {

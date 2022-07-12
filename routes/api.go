@@ -35,7 +35,7 @@ func RegisterAPIRoutes(r *gin.Engine) {
 		bungeeGroup := v1.Group("/bungees")
 		{
 			bgc := new(controllers.BungeesController)
-			bungeeGroup.GET("/", bgc.Index)
+			bungeeGroup.GET("", bgc.Index)
 		}
 	}
 }
