@@ -30,7 +30,7 @@ func (b *BungeeProxy) FetchPlayerlist() {
 	names := Cluster.GetCachedPlayerNames(uuids)
 
 	list := make(map[string][]BungeePlayer)
-	for _, uuid := range uuids {
+	for i, uuid := range uuids {
 		playerInfo := Cluster.GetPlayerInfo(uuid)
 
 		if playerInfo["online"] != "0" {
@@ -45,7 +45,7 @@ func (b *BungeeProxy) FetchPlayerlist() {
 			Server: playerInfo["server"],
 		}
 
-		list[player.Server] = append(list[player.Server], player)
+		list[player.Server][i] = player
 	}
 
 	b.playerlist = list
