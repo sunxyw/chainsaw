@@ -10,13 +10,16 @@ type FetchBungees struct {
 }
 
 func (job *FetchBungees) Run() {
+	bungee.Cluster.Fetching = true
+
 	bungee.Cluster.FetchProxies()
 
-	for _, proxy := range bungee.Cluster.Proxies {
+	for _, proxy := range bungee.Cluster.GetProxies(true) {
 		proxy.FetchPlayerlist()
 	}
 
 	bungee.Cluster.LastFetch = time.Now()
+	bungee.Cluster.Fetching = false
 
 	logger.InfoString("cronjob", "bungee", "playerlist fetched")
 }

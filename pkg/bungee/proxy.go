@@ -18,6 +18,7 @@ func NewBungeeProxy(name string) *BungeeProxy {
 }
 
 func (b *BungeeProxy) GetPlayerlist() map[string][]BungeePlayer {
+	waitUntilFetchFinished()
 	return b.playerlist
 }
 

@@ -10,8 +10,9 @@ import (
 
 type BungeeCluster struct {
 	RedisClient *redis.RedisClient
-	Proxies     []*BungeeProxy
+	proxies     []*BungeeProxy
 	LastFetch   time.Time
+	Fetching    bool
 }
 
 var Cluster *BungeeCluster
@@ -19,8 +20,9 @@ var Cluster *BungeeCluster
 func InitBungeeCluster(redisConf redis.RedisConf) {
 	Cluster = &BungeeCluster{
 		RedisClient: redis.NewClientWithConf(redisConf),
-		Proxies:     []*BungeeProxy{},
+		proxies:     []*BungeeProxy{},
 		LastFetch:   time.Now().Add(-time.Hour),
+		Fetching:    true,
 	}
 }
 
@@ -30,7 +32,14 @@ func (b *BungeeCluster) FetchProxies() {
 	for i, name := range proxyNames {
 		proxies[i] = NewBungeeProxy(name)
 	}
-	b.Proxies = proxies
+	b.proxies = proxies
+}
+
+func (b *BungeeCluster) GetProxies(force ...bool) []*BungeeProxy {
+	if len(force) == 0 || !force[0] {
+		waitUntilFetchFinished()
+	}
+	return b.proxies
 }
 
 func (b *BungeeCluster) GetPlayerInfo(uuid string) map[string]string {
@@ -50,4 +59,10 @@ func (b *BungeeCluster) GetCachedPlayerNames(uuids []string) map[string]string {
 	}
 
 	return names
+}
+
+func waitUntilFetchFinished() {
+	for Cluster.Fetching {
+		time.Sleep(100 * time.Millisecond)
+	}
 }

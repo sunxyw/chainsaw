@@ -21,7 +21,7 @@ func (ctrl *BungeesController) Index(c *gin.Context) {
 
 	result := make(map[string]map[string][]bungee.BungeePlayer)
 
-	for _, proxy := range bungee.Cluster.Proxies {
+	for _, proxy := range bungee.Cluster.GetProxies() {
 		result[proxy.Name] = proxy.GetPlayerlist()
 	}
 
