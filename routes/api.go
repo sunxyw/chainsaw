@@ -37,5 +37,13 @@ func RegisterAPIRoutes(r *gin.Engine) {
 			bgc := new(controllers.BungeesController)
 			bungeeGroup.GET("", bgc.Index)
 		}
+
+		notificationGroup := v1.Group("/notifications")
+		{
+			ntc := new(controllers.NotificationsController)
+			notificationGroup.GET("", ntc.Index)
+			notificationGroup.GET("/next", ntc.GetNextQueued)
+			notificationGroup.GET("/:id", ntc.Show)
+		}
 	}
 }
