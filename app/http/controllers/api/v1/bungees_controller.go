@@ -19,6 +19,9 @@ func (ctrl *BungeesController) Index(c *gin.Context) {
 		return
 	}
 
+	bungee.Cluster.Lock.RLock()
+	defer bungee.Cluster.Lock.RUnlock()
+
 	result := make(map[string]map[string][]bungee.BungeePlayer)
 
 	for _, proxy := range bungee.Cluster.GetProxies() {

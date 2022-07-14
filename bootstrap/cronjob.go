@@ -3,6 +3,7 @@ package bootstrap
 import (
 	"gohub/app/jobs"
 	"gohub/pkg/logger"
+	"time"
 
 	cronpkg "github.com/robfig/cron/v3"
 )
@@ -20,9 +21,17 @@ func SetupCronjob() {
 }
 
 func registerJob(job jobs.Job) {
-	cron.AddJob(job.CronSpec(), job)
+	jobFunc := func() {
+		start := time.Now()
+
+		job.Run()
+
+		logger.InfoString("cronjob", job.Name(), "finished in "+time.Since(start).String())
+	}
+
+	cron.AddFunc(job.CronSpec(), jobFunc)
 
 	if job.ShouldRunAtStartup() {
-		job.Run()
+		jobFunc()
 	}
 }

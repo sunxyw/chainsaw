@@ -2,15 +2,19 @@ package jobs
 
 import (
 	"gohub/pkg/bungee"
-	"gohub/pkg/logger"
 	"time"
 )
 
 type FetchBungees struct {
 }
 
+func (job *FetchBungees) Name() string {
+	return "fetch_bungees"
+}
+
 func (job *FetchBungees) Run() {
-	bungee.Cluster.Fetching = true
+	bungee.Cluster.Lock.Lock()
+	defer bungee.Cluster.Lock.Unlock()
 
 	bungee.Cluster.FetchProxies()
 
@@ -19,9 +23,6 @@ func (job *FetchBungees) Run() {
 	}
 
 	bungee.Cluster.LastFetch = time.Now()
-	bungee.Cluster.Fetching = false
-
-	logger.InfoString("cronjob", "bungee", "playerlist fetched")
 }
 
 func (job *FetchBungees) ShouldRunAtStartup() bool {
@@ -29,5 +30,5 @@ func (job *FetchBungees) ShouldRunAtStartup() bool {
 }
 
 func (job *FetchBungees) CronSpec() string {
-	return "@every 20s"
+	return "@every 30s"
 }

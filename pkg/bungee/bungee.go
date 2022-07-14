@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"gohub/pkg/logger"
 	"gohub/pkg/redis"
+	"sync"
 	"time"
 )
 
@@ -12,7 +13,7 @@ type BungeeCluster struct {
 	RedisClient *redis.RedisClient
 	proxies     []*BungeeProxy
 	LastFetch   time.Time
-	Fetching    bool
+	Lock        sync.RWMutex
 }
 
 var Cluster *BungeeCluster
@@ -22,7 +23,7 @@ func InitBungeeCluster(redisConf redis.RedisConf) {
 		RedisClient: redis.NewClientWithConf(redisConf),
 		proxies:     []*BungeeProxy{},
 		LastFetch:   time.Now().Add(-time.Hour),
-		Fetching:    true,
+		Lock:        sync.RWMutex{},
 	}
 }
 
@@ -36,9 +37,6 @@ func (b *BungeeCluster) FetchProxies() {
 }
 
 func (b *BungeeCluster) GetProxies(force ...bool) []*BungeeProxy {
-	if len(force) == 0 || !force[0] {
-		waitUntilFetchFinished()
-	}
 	return b.proxies
 }
 
@@ -59,10 +57,4 @@ func (b *BungeeCluster) GetCachedPlayerNames(uuids []string) map[string]string {
 	}
 
 	return names
-}
-
-func waitUntilFetchFinished() {
-	for Cluster.Fetching {
-		time.Sleep(100 * time.Millisecond)
-	}
 }
