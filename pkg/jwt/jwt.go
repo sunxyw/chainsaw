@@ -3,10 +3,10 @@ package jwt
 
 import (
 	"errors"
-	"gohub/pkg/logger"
 	"sync"
 
 	"github.com/gin-gonic/gin"
+	"github.com/samber/lo"
 )
 
 var (
@@ -33,45 +33,38 @@ func InitWithProvider(provider TokenProvider) {
 	})
 }
 
-func IssueToken(uid string) string {
+func IssueToken(uid string, ttype TokenType) string {
+	uid = ttype.Prefix() + uid
 	return JWT.Provider.IssueToken(uid)
 }
 
-func ParseToken(token string) (id string, tokenType TokenType, err error) {
+func ParseToken(token string, ttype TokenType) (id string, err error) {
 	id, err = JWT.Provider.ParseToken(token)
-
 	if err != nil {
-		return
+		return "", err
 	}
 
-	if isServiceToken(id) {
-		tokenType = TokenTypeService
-		id = id[3:]
-	} else {
-		tokenType = TokenTypeUser
+	// 检查令牌前缀是否为对应类型
+	if lo.Substring(id, 0, 4) != ttype.Prefix() {
+		return "", ErrTokenInvalid
 	}
 
-	return
+	// 约定令牌前缀为4字符长，例 usr_, svc_
+	id = id[4:]
+
+	return id, nil
 }
 
-func ParseHeaderToken(c *gin.Context, tokenType TokenType) (id string, ttype TokenType, err error) {
+func ParseHeaderToken(c *gin.Context, ttype TokenType) (id string, err error) {
 	token, err := getTokenFromHeader(c)
 	if err != nil {
-		return
+		return "", err
 	}
 
-	id, ttype, err = ParseToken(token)
+	id, err = ParseToken(token, ttype)
 	if err != nil {
-		return "", ttype, err
+		return "", err
 	}
 
-	inType := getTokenTypeList(tokenType)
-	logger.Dump(inType)
-	for _, t := range inType {
-		if t == ttype {
-			return id, ttype, nil
-		}
-	}
-
-	return "", ttype, ErrTokenInvalid
+	return id, nil
 }

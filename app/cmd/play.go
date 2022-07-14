@@ -1,9 +1,6 @@
 package cmd
 
 import (
-	"gohub/pkg/jwt"
-	"gohub/pkg/logger"
-
 	"github.com/spf13/cobra"
 )
 
@@ -15,6 +12,4 @@ var CmdPlay = &cobra.Command{
 
 // 调试完成后请记得清除测试代码
 func runPlay(cmd *cobra.Command, args []string) {
-	token := jwt.IssueToken("st_1")
-	logger.Dump(token)
 }

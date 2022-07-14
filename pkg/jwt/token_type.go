@@ -5,8 +5,6 @@ type TokenType uint
 const (
 	TokenTypeUser TokenType = iota
 	TokenTypeService
-
-	TokenTypeAll = TokenTypeUser | TokenTypeService
 )
 
 func (t TokenType) String() string {
@@ -19,12 +17,12 @@ func (t TokenType) String() string {
 	return ""
 }
 
-func getTokenTypeList(t TokenType) []TokenType {
-	var list []TokenType
-	if t&TokenTypeAll == TokenTypeAll {
-		list = []TokenType{TokenTypeUser, TokenTypeService}
-	} else {
-		list = []TokenType{t}
+func (t TokenType) Prefix() string {
+	switch t {
+	case TokenTypeUser:
+		return "usr_"
+	case TokenTypeService:
+		return "svc_"
 	}
-	return list
+	return ""
 }

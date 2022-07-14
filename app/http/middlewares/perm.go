@@ -14,25 +14,17 @@ func Perm() gin.HandlerFunc {
 
 		var scopes []string
 
-		id, ttype, err := jwt.ParseHeaderToken(c, jwt.TokenTypeAll)
+		id, err := jwt.ParseHeaderToken(c, jwt.TokenTypeService)
 		if err != nil {
 			scopes = []string{}
 		} else {
-			switch ttype {
-			case jwt.TokenTypeUser:
-				// TODO: set userModel
-			case jwt.TokenTypeService:
-				stModel := service_token.Get(id)
-				if stModel.ID == 0 {
-					response.Unauthorized(c, "找不到对应服务令牌，令牌可能已删除")
-					return
-				}
-
-				scopes = strings.Split(stModel.Scopes, ",")
-			default:
-				response.Unauthorized(c, "请查看相关的接口认证文档")
+			stModel := service_token.Get(id)
+			if stModel.ID == 0 {
+				response.Unauthorized(c, "找不到对应服务令牌，令牌可能已删除")
 				return
 			}
+
+			scopes = strings.Split(stModel.Scopes, ",")
 		}
 
 		c.Set("perm_scopes", scopes)
