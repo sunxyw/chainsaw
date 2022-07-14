@@ -23,3 +23,11 @@ func (job *FetchBungees) Run() {
 
 	logger.InfoString("cronjob", "bungee", "playerlist fetched")
 }
+
+func (job *FetchBungees) ShouldRunAtStartup() bool {
+	return true
+}
+
+func (job *FetchBungees) CronSpec() string {
+	return "@every 20s"
+}
