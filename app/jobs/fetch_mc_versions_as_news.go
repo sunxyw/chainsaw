@@ -44,11 +44,17 @@ func (job *FetchMCVersionsAsNews) Run() {
 
 	for _, version := range apiResponse.Versions {
 		title := "Minecraft " + version.ID + " 现已发布！"
-		releaseTime, err := time.Parse("2006-01-02T15:04:05Z", version.ReleaseTime)
+		releaseTime, err := time.Parse("2006-01-02T15:04:05-07:00", version.ReleaseTime)
 		if err != nil {
 			logger.LogIf(err)
 			continue
 		}
+
+		// 舍弃过旧的版本
+		if releaseTime.Before(time.Now().Add(-24 * time.Hour)) {
+			continue
+		}
+
 		news.AddNews(title, version.URL, releaseTime)
 	}
 }

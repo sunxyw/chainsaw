@@ -18,8 +18,14 @@ func (job *FetchMCBBSNews) Name() string {
 func (job *FetchMCBBSNews) Run() {
 	c := colly.NewCollector(colly.AllowedDomains("www.mcbbs.net"))
 
+	count := 0
+
 	// 遍历所有主题
 	c.OnHTML(`#threadlisttableid > tbody[id^="normalthread_"]`, func(e *colly.HTMLElement) {
+		if count >= 5 {
+			return
+		}
+
 		if lo.Contains(e.ChildAttrs("img", "alt"), "过期") {
 			return
 		}
@@ -29,6 +35,7 @@ func (job *FetchMCBBSNews) Run() {
 		href = "https://www.mcbbs.net/" + href
 
 		news.AddNews(title, href, time.Now())
+		count++
 	})
 
 	c.Visit("https://www.mcbbs.net/forum-news-1.html")
