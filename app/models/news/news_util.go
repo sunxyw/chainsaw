@@ -1,11 +1,13 @@
 package news
 
 import (
+	"fmt"
 	"gohub/pkg/app"
 	"gohub/pkg/database"
 	"gohub/pkg/logger"
 	"gohub/pkg/paginator"
 	"net/url"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -27,7 +29,7 @@ func All() (news []News) {
 
 func IsExist(field, value string) bool {
 	var count int64
-	database.DB.Model(News{}).Where("? = ?", field, value).Count(&count)
+	database.DB.Model(News{}).Where(fmt.Sprintf("`%s` = '%s'", field, value)).Count(&count)
 	return count > 0
 }
 
@@ -42,7 +44,7 @@ func Paginate(c *gin.Context, perPage int) (news []News, paging paginator.Paging
 	return
 }
 
-func AddNews(title string, newsURL string) {
+func AddNews(title string, newsURL string, newsTime time.Time) {
 	if IsExist("url", newsURL) {
 		return
 	}
@@ -51,9 +53,10 @@ func AddNews(title string, newsURL string) {
 	logger.LogIf(err)
 
 	news := News{
-		Title:  title,
-		URL:    newsURL,
-		Source: parsed.Hostname(),
+		Title:     title,
+		URL:       newsURL,
+		Source:    parsed.Hostname(),
+		ReleaseAt: newsTime,
 	}
 	news.Create()
 }

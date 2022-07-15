@@ -15,6 +15,7 @@ func SetupCronjob() {
 
 	registerJob(&jobs.FetchBungees{})
 	registerJob(&jobs.FetchMCBBSNews{})
+	registerJob(&jobs.FetchMCVersionsAsNews{})
 
 	cron.Start()
 	logger.InfoString("cronjob", "scheduler", "started")

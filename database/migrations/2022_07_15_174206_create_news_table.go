@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"gohub/app/models"
 	"gohub/pkg/migrate"
+	"time"
 
 	"gorm.io/gorm"
 )
@@ -13,9 +14,10 @@ func init() {
 	type New struct {
 		models.BaseModel
 
-		Title  string `gorm:"type:varchar(255);not null"`
-		URL    string `gorm:"type:varchar(255);not null"`
-		Source string `gorm:"type:varchar(255);not null"`
+		Title     string    `gorm:"type:varchar(255);not null"`
+		URL       string    `gorm:"type:varchar(255);not null"`
+		Source    string    `gorm:"type:varchar(255);not null"`
+		ReleaseAt time.Time `gorm:"column:release_at;"`
 
 		models.CommonTimestampsField
 	}

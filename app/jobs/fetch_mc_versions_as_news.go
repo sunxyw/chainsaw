@@ -5,6 +5,7 @@ import (
 	"gohub/app/models/news"
 	"gohub/pkg/logger"
 	"net/http"
+	"time"
 )
 
 type FetchMCVersionsAsNews struct {
@@ -33,7 +34,7 @@ func (job *FetchMCVersionsAsNews) Run() {
 		logger.LogIf(err)
 		return
 	}
-	resp.Body.Close()
+	defer resp.Body.Close()
 
 	var apiResponse apiResponse
 	if err := json.NewDecoder(resp.Body).Decode(&apiResponse); err != nil {
@@ -43,7 +44,12 @@ func (job *FetchMCVersionsAsNews) Run() {
 
 	for _, version := range apiResponse.Versions {
 		title := "Minecraft " + version.ID + " 现已发布！"
-		news.AddNews(title, version.URL)
+		releaseTime, err := time.Parse("2006-01-02T15:04:05Z", version.ReleaseTime)
+		if err != nil {
+			logger.LogIf(err)
+			continue
+		}
+		news.AddNews(title, version.URL, releaseTime)
 	}
 }
 

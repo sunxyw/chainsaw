@@ -45,5 +45,11 @@ func RegisterAPIRoutes(r *gin.Engine) {
 			notificationGroup.GET("/next", ntc.GetNextQueued)
 			notificationGroup.GET("/:id", ntc.Show)
 		}
+
+		newsGroup := v1.Group("/news")
+		{
+			nsc := new(controllers.NewsController)
+			newsGroup.GET("", nsc.Index)
+		}
 	}
 }

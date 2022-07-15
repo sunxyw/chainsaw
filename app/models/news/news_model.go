@@ -4,14 +4,16 @@ package news
 import (
 	"gohub/app/models"
 	"gohub/pkg/database"
+	"time"
 )
 
 type News struct {
 	models.BaseModel
 
-	Title  string `json:"title"`
-	URL    string `json:"url"`
-	Source string `json:"source"`
+	Title     string    `json:"title"`
+	URL       string    `json:"url"`
+	Source    string    `json:"source"`
+	ReleaseAt time.Time `json:"release_at"`
 
 	models.CommonTimestampsField
 }
