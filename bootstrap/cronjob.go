@@ -6,9 +6,11 @@ import (
 	"time"
 
 	cronpkg "github.com/robfig/cron/v3"
+	"go.uber.org/zap"
 )
 
 var cron *cronpkg.Cron
+var registerdJobs []jobs.Job
 
 func SetupCronjob() {
 	cron = cronpkg.New()
@@ -18,7 +20,7 @@ func SetupCronjob() {
 	registerJob(&jobs.FetchMCVersionsAsNews{})
 
 	cron.Start()
-	logger.InfoString("cronjob", "scheduler", "started")
+	logger.Info("Cronjob Scheduler Started", zap.Int("jobs", len(registerdJobs)))
 }
 
 func registerJob(job jobs.Job) {
@@ -27,7 +29,7 @@ func registerJob(job jobs.Job) {
 
 		job.Run()
 
-		logger.InfoString("cronjob", job.Name(), "finished in "+time.Since(start).String())
+		logger.Info("Cronjob Executed", zap.String("job", job.Name()), zap.String("duration", time.Since(start).String()))
 	}
 
 	cron.AddFunc(job.CronSpec(), jobFunc)
@@ -35,4 +37,6 @@ func registerJob(job jobs.Job) {
 	if job.ShouldRunAtStartup() {
 		jobFunc()
 	}
+
+	registerdJobs = append(registerdJobs, job)
 }
