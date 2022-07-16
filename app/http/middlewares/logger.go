@@ -40,6 +40,11 @@ func Logger() gin.HandlerFunc {
 			c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(requestBody))
 		}
 
+		// 如果请求体过长则截取
+		if len(requestBody) > 1024 {
+			requestBody = append(requestBody[:1024], []byte("...")...)
+		}
+
 		// 设置开始时间
 		start := time.Now()
 		c.Next()

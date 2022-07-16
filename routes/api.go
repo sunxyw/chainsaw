@@ -51,5 +51,13 @@ func RegisterAPIRoutes(r *gin.Engine) {
 			nsc := new(controllers.NewsController)
 			newsGroup.GET("", nsc.Index)
 		}
+
+		mapsGroup := v1.Group("/maps")
+		{
+			mcc := new(controllers.McmapsController)
+			mapsGroup.GET("", mcc.Index)
+			mapsGroup.GET("/:id", mcc.Show)
+			mapsGroup.POST("", mcc.Store)
+		}
 	}
 }
