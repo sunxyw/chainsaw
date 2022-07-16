@@ -36,7 +36,7 @@ func (b *BungeeCluster) FetchProxies() {
 	b.proxies = proxies
 }
 
-func (b *BungeeCluster) GetProxies(force ...bool) []*BungeeProxy {
+func (b *BungeeCluster) GetProxies() []*BungeeProxy {
 	return b.proxies
 }
 

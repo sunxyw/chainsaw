@@ -18,7 +18,7 @@ func (job *FetchBungees) Run() {
 
 	bungee.Cluster.FetchProxies()
 
-	for _, proxy := range bungee.Cluster.GetProxies(true) {
+	for _, proxy := range bungee.Cluster.GetProxies() {
 		proxy.FetchPlayerlist()
 	}
 
