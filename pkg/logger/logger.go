@@ -5,10 +5,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"gohub/pkg/app"
+	"gohub/pkg/config"
 	"os"
 	"strings"
 	"time"
 
+	"github.com/spf13/cast"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
@@ -98,7 +100,7 @@ func getLogWriter(filename string, maxSize, maxBackup, maxAge int, compress bool
 		Compress:   compress,
 	}
 	// 配置输出介质
-	if app.IsLocal() {
+	if app.IsLocal() || cast.ToBool(config.Env("LOG_TO_CONSOLE", false)) {
 		// 本地开发终端打印和记录文件
 		return zapcore.NewMultiWriteSyncer(zapcore.AddSync(os.Stdout), zapcore.AddSync(lumberJackLogger))
 	} else {
