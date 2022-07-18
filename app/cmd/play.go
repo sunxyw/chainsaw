@@ -1,8 +1,8 @@
 package cmd
 
 import (
-	"gohub/app/models/news"
 	"gohub/pkg/logger"
+	"gohub/pkg/rcon"
 
 	"github.com/spf13/cobra"
 )
@@ -15,6 +15,13 @@ var CmdPlay = &cobra.Command{
 
 // 调试完成后请记得清除测试代码
 func runPlay(cmd *cobra.Command, args []string) {
-	// news.AddNews("testing news", "https://example.org/news/1")
-	logger.Dump(news.IsExist("url", "https://example.org/news/1"))
+	rcon.InitRconClient()
+	rcon.AddServer(rcon.ServerConf{
+		Name:     "test",
+		Host:     "",
+		Password: "",
+	})
+	resp, err := rcon.Server("test").Send("list")
+	logger.LogIf(err)
+	logger.Dump(resp)
 }

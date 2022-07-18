@@ -11,6 +11,7 @@ require (
 	github.com/go-redis/redis/v8 v8.11.5
 	github.com/gocolly/colly/v2 v2.1.0
 	github.com/golang-jwt/jwt/v4 v4.4.2
+	github.com/gorcon/rcon v1.3.3
 	github.com/iancoleman/strcase v0.2.0
 	github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible
 	github.com/mgutz/ansi v0.0.0-20200706080929-d51e80ef957d
