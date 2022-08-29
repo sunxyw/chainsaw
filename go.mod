@@ -18,7 +18,7 @@ require (
 	github.com/mojocn/base64Captcha v1.3.5
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/robfig/cron/v3 v3.0.1
-	github.com/samber/lo v1.25.0
+	github.com/samber/lo v1.27.1
 	github.com/spf13/afero v1.9.2
 	github.com/spf13/cast v1.5.0
 	github.com/spf13/cobra v1.5.0
