@@ -30,7 +30,7 @@ require (
 	golang.org/x/crypto v0.0.0-20220622213112-05595931fe9d
 	google.golang.org/api v0.88.0
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0
-	gorm.io/driver/mysql v1.3.5
+	gorm.io/driver/mysql v1.4.2
 	gorm.io/driver/sqlite v1.3.6
 	gorm.io/gorm v1.23.8
 )
