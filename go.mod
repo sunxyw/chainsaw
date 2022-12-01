@@ -26,7 +26,7 @@ require (
 	github.com/thedevsaddam/govalidator v1.9.10
 	github.com/ulule/limiter/v3 v3.10.0
 	github.com/wagslane/go-password-validator v0.3.0
-	go.uber.org/zap v1.21.0
+	go.uber.org/zap v1.24.0
 	golang.org/x/crypto v0.0.0-20220622213112-05595931fe9d
 	google.golang.org/api v0.88.0
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0
